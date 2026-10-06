@@ -5,7 +5,7 @@
 <h1 align="center">Climapi</h1>
 
 <p align="center">
-  Globo terráqueo interactivo con clima en tiempo real, estética pixel art oscura y minimalista.<br>
+  Globo terráqueo interactivo con clima en tiempo real.<br>
   Sitio estático: no necesita compilar ni instalar dependencias.
 </p>
 
