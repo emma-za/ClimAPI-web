@@ -10,7 +10,13 @@
 </p>
 
 <p align="center">
-  <img src="docs/img/hero.jpg" alt="Climapi: el globo con el mapa de temperatura, tormentas, eventos y el panel de clima de Acapulco" width="900">
+  <a href="https://labs.paginee.com/Climapi/"><strong>▶ Ver Climapi en vivo: labs.paginee.com/Climapi</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://labs.paginee.com/Climapi/">
+    <img src="docs/img/hero.jpg" alt="Climapi: el globo con el mapa de temperatura, tormentas, eventos y el panel de clima de Acapulco" width="900">
+  </a>
 </p>
 
 ## Qué hace
@@ -69,6 +75,11 @@ escritorio con la línea de tiempo a ancho completo (tablet).
   &nbsp;&nbsp;
   <img src="docs/img/tablet.jpg" alt="Climapi en una tablet con el panel de Capas abierto y el clima de Madrid" height="560">
 </p>
+
+## Demo en vivo
+
+Publicado en **<https://labs.paginee.com/Climapi/>** (hosting Apache con HTTPS). Los enlaces del botón de compartir
+(`#c=…&z=…`) funcionan directamente sobre esa dirección.
 
 ## Ejecutar
 
@@ -130,8 +141,11 @@ Climapi/
 │     │  └─ timeline.js        Control de la línea de tiempo
 │     └─ effects/
 │        └─ space.js           Estrellas, nebulosas y estrellas fugaces
+├─ deploy/
+│  └─ hostgator.htaccess   Configuración de Apache (compresión, caché, tipos MIME)
 └─ tools/
-   └─ serve.py             Servidor local sin caché
+   ├─ serve.py             Servidor local sin caché
+   └─ build-zip.ps1        Genera dist/climapi-hostgator.zip para subir al hosting
 ```
 
 ## Notas de desarrollo
@@ -153,7 +167,12 @@ Climapi/
 - **Enlaces compartidos.** El estado va en el hash: `#c=lng,lat&z=zoom&m=dato&t=segundos&l=-capa,+capa&p=lat,lon`.
 - **Límites de las APIs gratuitas.** Open-Meteo admite unas 600 llamadas por minuto; cada carga consume cerca de 400.
   Los datos de la rejilla se guardan 1 hora en `localStorage`. Recargar muchas veces seguidas devuelve error 429.
-- **Publicar.** Es un sitio estático: basta subir la carpeta a GitHub Pages, Netlify o similar.
+- **Publicar en un hosting (HostGator / cPanel).** `tools/build-zip.ps1` genera `dist/climapi-hostgator.zip` con solo lo
+  necesario (sitio + `.htaccess` de `deploy/`). En cPanel: *Administrador de archivos* → `public_html` (o la carpeta del
+  subdominio) → *Cargar* el zip → *Extraer*. Es un sitio estático, así que también sirve GitHub Pages, Netlify o similar.
+  Activa el SSL (cPanel → *SSL/TLS Status* → *Run AutoSSL*) y después descomenta el redirect a HTTPS del `.htaccess`.
+  Las rutas del proyecto son relativas, por lo que funciona igual en la raíz de un dominio que en una subcarpeta
+  (como `labs.paginee.com/Climapi/`).
   Antes conviene sustituir las teselas públicas de OpenStreetMap por un proveedor propio si habrá mucho tráfico.
 
 ## Fuentes de datos y créditos
