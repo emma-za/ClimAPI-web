@@ -1,0 +1,74 @@
+/* Panel de clima (esquina superior derecha): cabecera, bloque principal, métricas, pronóstico y alertas.
+   También contiene los estilos de la tarjeta de tormenta (.clock, .coords, .stats, .days, .day). */
+
+#panel {
+  position: absolute; z-index: 2; top: 16px; right: 16px; width: 290px; max-height: calc(100% - 32px);
+  overflow: auto; padding: 12px 14px 14px;
+}
+#panel::-webkit-scrollbar { width: 8px; }
+#panel::-webkit-scrollbar-thumb { background: var(--dim); }
+
+#close { position: absolute; top: 4px; right: 8px; background: none; border: 0; color: var(--dim); font: 24px 'VT323', monospace; cursor: pointer; }
+#close:hover { color: var(--accent); }
+
+.place { font-size: 12px; font-weight: 700; margin: 0 24px 4px 0; line-height: 1.4; }
+
+/* ---------- Cabecera ---------- */
+.ph { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-right: 22px; }
+.ph .place {
+  margin: 0; font-size: 11px; line-height: 1.35; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere;
+}
+.ph-sub { display: block; margin-top: 2px; color: var(--dim); font-size: 15px; line-height: 1; }
+.ph-clock { font-size: 30px; line-height: .9; color: var(--accent); }
+.ph-clock small { display: block; margin-top: 3px; font-size: 15px; text-align: right; color: #ffe066; }
+
+/* ---------- Bloque principal ---------- */
+.hero { display: flex; align-items: center; gap: 10px; margin: 12px 0 6px; }
+.hero > .px { width: 38px; height: 38px; color: var(--accent); }
+.hero .temp { font-size: 46px; line-height: .9; }
+.hero-side { display: grid; gap: 2px; line-height: 1; min-width: 0; }
+.hero-side b { font-weight: normal; font-size: 19px; }
+.hero-side small { color: var(--dim); font-size: 16px; }
+.chip { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; color: var(--dim); font-size: 17px; line-height: 1; }
+.chip .px { width: 16px; height: 16px; }
+
+/* ---------- Métricas y pronóstico ---------- */
+.metrics {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 8px 0;
+  border-top: 2px dashed var(--dim); border-bottom: 2px dashed var(--dim);
+}
+.metrics > div { display: grid; justify-items: center; gap: 3px; font-size: 17px; line-height: 1; text-align: center; }
+.metrics .px { width: 20px; height: 20px; color: var(--dim); }
+.metrics small { color: var(--dim); font-size: 14px; }
+
+.fc { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 10px; text-align: center; }
+.fc > div { display: grid; justify-items: center; gap: 3px; font-size: 18px; line-height: 1; }
+.fc small { color: var(--dim); font-size: 15px; text-transform: capitalize; }
+.fc .px { width: 22px; height: 22px; color: var(--line); }
+.fc > div:first-child .px { color: var(--accent); }
+
+/* ---------- Alertas plegables (tormentas cercanas, evento seleccionado) ---------- */
+.alerts { margin: 8px 0 0; border: 2px solid var(--c, var(--line)); background: #ffffff0d; font-size: 17px; line-height: 1.1; }
+.alerts summary { display: flex; align-items: center; gap: 6px; padding: 4px 8px; cursor: pointer; list-style: none; }
+.alerts summary::-webkit-details-marker { display: none; }
+.alerts summary::after { content: '+'; margin-left: auto; color: var(--dim); }
+.alerts[open] summary::after { content: '–'; }
+.alerts summary .px { width: 16px; height: 16px; color: var(--c, var(--line)); }
+.alerts summary b { color: var(--c, var(--line)); font-weight: normal; }
+.alerts summary em { font-style: normal; color: var(--dim); }
+.alerts summary span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.alert-body { padding: 4px 8px 6px; border-top: 2px dashed var(--dim); color: var(--dim); }
+.alert-body a { color: var(--accent); }
+.alert-item { padding: 3px 0; }
+.alert-item + .alert-item { border-top: 1px dashed var(--dim); }
+.alert-item b { color: var(--c, var(--line)); font-weight: normal; }
+
+/* ---------- Tarjeta de tormenta ---------- */
+.clock { font-size: 40px; line-height: 1; color: var(--accent); margin: 0 0 6px; }
+.coords { color: var(--dim); font-size: 16px; margin-bottom: 12px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-bottom: 14px; padding-top: 10px; border-top: 2px dashed var(--dim); }
+.stats span { color: var(--dim); font-size: 16px; }
+.days { display: grid; gap: 2px; padding-top: 10px; border-top: 2px dashed var(--dim); }
+.day { display: grid; grid-template-columns: 1.2fr 28px 1fr; align-items: center; gap: 8px; }
+.day .t { text-align: right; }

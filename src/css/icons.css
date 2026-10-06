@@ -1,0 +1,6 @@
+/* Iconos pixel: se pintan como máscara, así heredan el color del texto (currentColor). */
+.px {
+  display: inline-block; width: 24px; height: 24px; flex: none;
+  background: currentColor;
+  -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat;
+}

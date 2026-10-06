@@ -1,0 +1,35 @@
+/* Modo Explorar: lista de eventos y marcadores sobre el globo. */
+
+#pop-explore { max-width: 270px; }
+#pop-explore #ev-list { max-height: 46vh; overflow: auto; }
+#ev-list { display: grid; gap: 4px; }
+#ev-list small { color: var(--dim); font: 16px 'VT323', monospace; text-transform: none; }
+
+.ev-item {
+  display: flex; align-items: center; gap: 8px; text-align: left; cursor: pointer; padding: 4px 6px;
+  background: none; border: 2px solid transparent; color: var(--line); font: 18px 'VT323', monospace;
+}
+.ev-item .px { color: var(--c); width: 20px; height: 20px; }
+.ev-item span { display: grid; line-height: 1; }
+.ev-item small { color: var(--dim); font-size: 15px; }
+.ev-item:hover { border-color: var(--c); background: #ffffff10; }
+
+/* ---------- Marcadores ---------- */
+.ev {
+  width: 30px; height: 30px; display: grid; place-items: center; cursor: pointer; padding: 0;
+  background: var(--panel); border: 2px solid var(--c); color: var(--c); box-shadow: 3px 3px 0 #000;
+}
+.ev .px { width: 18px; height: 18px; }
+.ev::after {
+  content: ''; position: absolute; inset: -5px; border: 2px solid var(--c); opacity: 0; pointer-events: none;
+  animation: evpulse 2.4s steps(5) infinite;
+}
+@keyframes evpulse { 0% { opacity: .9; transform: scale(.75); } 100% { opacity: 0; transform: scale(1.5); } }
+.ev:hover, .ev:focus-visible { background: var(--c); color: #000; z-index: 6; outline: none; }
+
+.ev-label {
+  display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px; z-index: 6;
+  white-space: nowrap; padding: 1px 6px; background: var(--panel); border: 2px solid var(--c); color: var(--line);
+  font: 17px 'VT323', monospace; pointer-events: none;
+}
+.ev:hover .ev-label, .ev:focus-visible .ev-label, .zoomed-in .ev-label { display: block; }

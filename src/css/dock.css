@@ -1,0 +1,81 @@
+/* Dock de capas (esquina inferior izquierda): botones-icono, paneles desplegables y leyenda. */
+
+#dock {
+  position: absolute; z-index: 3; left: 16px; bottom: 96px;
+  display: flex; align-items: flex-end; gap: 10px;
+}
+#rail { display: grid; gap: 8px; }
+
+/* ---------- Botones del dock ---------- */
+.rail-btn {
+  position: relative; width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer;
+  background: var(--panel); border: 2px solid var(--line); box-shadow: var(--px) var(--px) 0 #000; color: var(--line);
+}
+.rail-btn .ic { line-height: 1; color: var(--line); }
+.rail-btn:hover { border-color: var(--accent); }
+.rail-btn:hover .ic { color: var(--accent); }
+.rail-btn[aria-expanded="true"] { border-color: var(--accent); background: #0d1a14; }
+.rail-btn[aria-expanded="true"] .ic { color: var(--accent); }
+.rail-btn:focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
+
+/* insignia con el número de tormentas / eventos */
+#storm-count, #ev-count {
+  position: absolute; top: -9px; right: -9px; min-width: 18px; padding: 2px 4px; text-align: center;
+  background: var(--accent); color: #000; font: 700 9px 'Silkscreen', monospace;
+}
+#storm-count:empty, #ev-count:empty { display: none; }
+
+/* ---------- Paneles desplegables ---------- */
+.pop {
+  background: var(--panel); border: 2px solid var(--line); box-shadow: var(--px) var(--px) 0 #000;
+  padding: 10px 12px; min-width: 200px; max-width: 250px; max-height: calc(100vh - 200px); overflow: auto;
+}
+.pop[hidden] { display: none; }
+.pop h3 { margin: 0 0 10px; font: 700 10px 'Silkscreen', monospace; text-transform: uppercase; color: var(--accent); letter-spacing: .04em; }
+
+/* ---------- Botones-icono (radio y casilla) ---------- */
+.tog { position: relative; display: grid; justify-items: center; align-content: start; gap: 2px; cursor: pointer; }
+.tog input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; appearance: none; }
+.tog .ic {
+  display: grid; place-items: center; width: 44px; height: 44px; line-height: 1;
+  border: 2px solid var(--dim); background: var(--bg); color: var(--dim);
+}
+.tog .px { width: 26px; height: 26px; }
+.tog:hover .ic { border-color: var(--line); color: var(--line); }
+.tog input:checked + .ic { border-color: var(--accent); background: #0d1a14; color: var(--accent); box-shadow: 0 0 0 2px #000 inset; }
+.tog input:focus-visible + .ic { outline: 2px dashed var(--accent); outline-offset: 2px; }
+.tog input:disabled { cursor: default; }
+.tog input:disabled + .ic { opacity: .35; }
+.tog em { font: normal 15px 'VT323', monospace; color: var(--dim); line-height: 1; text-align: center; }
+.tog input:checked ~ em { color: var(--line); }
+.tog.cap { width: 60px; }
+
+#metrics { display: grid; grid-template-columns: repeat(4, 44px); gap: 8px; }
+#metrics small { color: var(--dim); font: 16px 'VT323', monospace; text-transform: none; }
+#layer-grid { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px 8px; }
+
+/* ---------- Interruptor con texto y botón de acción ---------- */
+.switch { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 10px; font-size: 18px; }
+.switch input { appearance: none; width: 14px; height: 14px; margin: 0; border: 2px solid var(--line); background: transparent; cursor: pointer; }
+.switch input:checked { background: var(--accent); border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--panel); }
+
+.btn-px {
+  display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 10px; padding: 7px 10px; cursor: pointer;
+  background: var(--accent); color: #000; border: 2px solid var(--accent); box-shadow: 3px 3px 0 #000;
+  font: 700 10px 'Silkscreen', monospace; text-transform: uppercase;
+}
+.btn-px .px { width: 18px; height: 18px; }
+.btn-px:hover { background: var(--line); border-color: var(--line); }
+.btn-px.on { background: var(--panel); color: var(--accent); border-color: var(--accent); }
+#pop-layers .btn-px { margin-bottom: 12px; }
+
+/* ---------- Leyenda compacta (siempre visible) ---------- */
+#legend-box {
+  position: absolute; z-index: 2; left: 16px; bottom: 16px; width: 210px; padding: 8px 10px;
+  background: var(--panel); border: 2px solid var(--line); box-shadow: var(--px) var(--px) 0 #000;
+}
+#legend-box .lg-head { font: 700 10px 'Silkscreen', monospace; text-transform: uppercase; margin-bottom: 6px; }
+#legend-bar { height: 8px; border: 2px solid var(--line); background: #000; }
+.lg { display: flex; justify-content: space-between; margin-top: 2px; font: 16px 'VT323', monospace; color: var(--dim); text-transform: none; }
+#legend-box small { color: var(--dim); font: 16px 'VT323', monospace; }
+#legend-box small:empty { display: none; }

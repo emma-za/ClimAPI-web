@@ -1,0 +1,15 @@
+{
+  "name": "Climapi",
+  "short_name": "Climapi",
+  "description": "Globo terráqueo interactivo con clima en tiempo real, tormentas, satélite y línea de tiempo.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "icons": [
+    { "src": "assets/img/veleta.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

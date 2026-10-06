@@ -1,0 +1,43 @@
+/* Elementos flotantes sobre el mapa: buscador, ayuda, avisos y controles de MapLibre. */
+
+/* ---------- Buscador ---------- */
+#search {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  display: flex; gap: 8px; width: min(440px, calc(100% - 32px)); flex-wrap: wrap;
+}
+#search input { flex: 1; padding: 6px 10px; font-size: 20px; outline: none; }
+#search input:focus { border-color: var(--accent); }
+#search input::placeholder { color: var(--dim); }
+#search button { padding: 6px 12px; font-size: 12px; cursor: pointer; }
+#search button:hover, #search button:active { background: var(--line); color: var(--bg); }
+
+#results { list-style: none; margin: 4px 0 0; padding: 0; width: 100%; }
+#results li { padding: 6px 10px; cursor: pointer; }
+#results li:hover { background: var(--line); color: var(--bg); }
+#results small { color: var(--dim); font-size: 16px; }
+#results li:hover small { color: var(--bg); }
+
+#search #share-btn { display: grid; place-items: center; padding: 6px 8px; }
+#search #share-btn .px { width: 18px; height: 18px; }
+
+/* ---------- Ayuda y avisos ---------- */
+#hint {
+  position: absolute; bottom: 104px; left: 50%; transform: translateX(-50%); z-index: 2;
+  padding: 6px 12px; font-size: 9px; color: var(--dim); pointer-events: none; white-space: nowrap;
+}
+#toast {
+  position: absolute; z-index: 9; left: 50%; bottom: 120px; transform: translateX(-50%);
+  max-width: min(480px, calc(100vw - 32px)); padding: 8px 14px; text-align: center;
+  background: var(--panel); color: var(--accent); border: 2px solid var(--accent); box-shadow: 4px 4px 0 #000;
+  font: 19px 'VT323', monospace; line-height: 1.1;
+}
+#toast[hidden] { display: none; }
+
+/* ---------- Controles de MapLibre ---------- */
+.maplibregl-ctrl-group { box-shadow: var(--px) var(--px) 0 #000 !important; }
+.maplibregl-ctrl-group button { background-color: transparent; }
+.maplibregl-ctrl-group button + button { border-top: 2px solid var(--line); }
+.maplibregl-ctrl button .maplibregl-ctrl-icon { filter: invert(1); }
+.maplibregl-ctrl-attrib { background: var(--panel) !important; color: var(--dim) !important; font-family: 'VT323', monospace; font-size: 14px; }
+.maplibregl-ctrl-attrib a { color: var(--dim) !important; }
+.maplibregl-ctrl-attrib-button { filter: invert(1); }

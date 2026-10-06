@@ -1,0 +1,22 @@
+/* Anomalía de temperatura en el panel de clima: "¿es normal?" */
+
+.anom {
+  margin: 0 0 10px; padding: 6px 8px; line-height: 1.1;
+  border: 2px solid var(--c, var(--dim)); background: #ffffff0d;
+}
+.anom > small { color: var(--dim); font: 16px 'VT323', monospace; }
+
+.anom-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 18px; }
+.anom-top b { font-weight: normal; font-size: 26px; line-height: .9; color: var(--c); }
+
+/* escala de 5 tramos con marcador: frío extremo … calor extremo */
+.anom-bar { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; height: 8px; margin: 8px 0 6px; }
+.anom-bar i { display: block; opacity: .55; }
+.anom-mark {
+  position: absolute; top: -4px; width: 6px; height: 16px; transform: translateX(-50%);
+  background: var(--line); border: 2px solid #000;
+}
+.anom-note { display: block; color: var(--dim); font: 16px 'VT323', monospace; }
+
+/* punto de color bajo cada día del pronóstico */
+.adot { display: block; width: 8px; height: 8px; background: var(--c); }

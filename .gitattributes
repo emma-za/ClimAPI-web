@@ -1,0 +1,5 @@
+# Saltos de l?nea consistentes entre sistemas; im?genes como binarios
+* text=auto
+*.png binary
+*.jpg binary
+

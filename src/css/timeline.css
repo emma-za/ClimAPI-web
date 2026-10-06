@@ -1,0 +1,30 @@
+/* Línea de tiempo global (-12 h … +24 h), abajo al centro. */
+
+#timeline {
+  position: absolute; z-index: 3; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: min(540px, calc(100vw - 540px)); min-width: 320px; padding: 8px 14px 6px;
+  background: var(--panel); border: 2px solid var(--line); box-shadow: var(--px) var(--px) 0 #000;
+}
+.tl-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+#tl-label { font: 700 10px 'Silkscreen', monospace; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+#tl-label.shifted { color: #ffe066; }
+
+.tl-btn {
+  display: grid; place-items: center; height: 26px; min-width: 26px; padding: 0 6px; cursor: pointer;
+  background: none; border: 2px solid var(--line); color: var(--line); font: 700 9px 'Silkscreen', monospace; text-transform: uppercase;
+}
+.tl-btn .px { width: 14px; height: 14px; }
+.tl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* control deslizante: la parte pasada (izquierda) más oscura, la futura verdosa */
+#tl-range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 20px; margin: 0; background: transparent; cursor: pointer; }
+#tl-range::-webkit-slider-runnable-track { height: 8px; border: 2px solid var(--line); background: linear-gradient(90deg, #1b1b2a 0 33.33%, #0f2a1c 33.33% 100%); }
+#tl-range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: var(--accent); border: 2px solid #000; }
+#tl-range::-moz-range-track { height: 8px; border: 2px solid var(--line); background: linear-gradient(90deg, #1b1b2a 0 33.33%, #0f2a1c 33.33% 100%); }
+#tl-range::-moz-range-thumb { width: 10px; height: 18px; background: var(--accent); border: 2px solid #000; border-radius: 0; }
+#tl-range:focus-visible { outline: 2px dashed var(--accent); outline-offset: 3px; }
+
+.tl-ticks { position: relative; height: 16px; margin: 2px 7px 0; font: 15px 'VT323', monospace; color: var(--dim); }
+.tl-ticks span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.tl-ticks span:first-child { transform: translateX(-7px); }
+.tl-ticks span:last-child { transform: translateX(calc(-100% + 7px)); }

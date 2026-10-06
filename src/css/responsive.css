@@ -1,0 +1,132 @@
+/* Responsive: tablets, móviles y pantallas bajas (móvil en horizontal).
+   Va el último en el HTML para ganar la cascada: todos los @media del proyecto viven aquí.
+
+   Niveles:
+     ≤ 1000 px   tablet / ventana estrecha: la línea de tiempo pasa a ancho completo
+     ≤ 700 px    móvil vertical: dock horizontal, panel de clima como "hoja" inferior
+     alto ≤ 520  móvil horizontal: columnas laterales y piezas compactas
+     (pointer: coarse)  pantallas táctiles: zonas de toque más grandes, sin botones de zoom  */
+
+:root {
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+
+/* ---------- Táctil (cualquier tamaño) ---------- */
+button, label, summary { touch-action: manipulation; }
+#tl-range { touch-action: none; }                       /* arrastrar el control no debe desplazar la página */
+.is-touch * { -webkit-tap-highlight-color: transparent; }
+.is-touch #dock, .is-touch #timeline, .is-touch #legend-box, .is-touch #search button {
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+
+@media (pointer: coarse) {
+  #search input, #search button { min-height: 44px; }
+  .tl-btn { height: 36px; min-width: 36px; }
+  #tl-range { height: 34px; }
+  #tl-range::-webkit-slider-thumb { width: 22px; height: 34px; margin-top: -14px; }
+  #tl-range::-moz-range-thumb { width: 18px; height: 30px; }
+  #close { width: 44px; height: 44px; top: 0; right: 0; font-size: 32px; }
+  .ev { width: 38px; height: 38px; }
+  .ev .px { width: 20px; height: 20px; }
+  .ev-item, .storm-item { min-height: 42px; }
+  .alerts summary { min-height: 40px; }
+  .maplibregl-ctrl-zoom-in, .maplibregl-ctrl-zoom-out { display: none; }       /* el zoom se hace con los dedos */
+}
+
+/* ---------- Tablet / ventana estrecha (≤ 1000 px) ---------- */
+@media (max-width: 1000px) {
+  /* --tl-h = altura real de la línea de tiempo (la mide ui/mobile.js) */
+  #search { width: clamp(340px, calc(100% - 340px), 480px); }   /* tres botones en una fila y sin chocar con el panel de clima (290 px) */
+  #timeline { left: 16px; right: 16px; transform: none; width: auto; min-width: 0; }
+  #legend-box { bottom: calc(var(--tl-h, 88px) + 24px); }
+  #dock { bottom: calc(var(--tl-h, 88px) + 24px + 82px); }                 /* encima de la leyenda */
+  .maplibregl-ctrl-bottom-right { bottom: calc(var(--tl-h, 88px) + 12px); }   /* controles y créditos sobre la línea de tiempo */
+  .pop { max-height: calc(100dvh - 280px); }
+}
+
+/* ---------- Móvil vertical (≤ 700 px) ---------- */
+@media (max-width: 700px) {
+  /* arriba: buscador a todo lo ancho y leyenda debajo */
+  #search { top: calc(8px + var(--safe-t)); left: calc(8px + var(--safe-l)); right: calc(8px + var(--safe-r)); width: auto; gap: 6px; }
+  #search input { font-size: 18px; min-width: 0; }
+  #search button { padding: 6px 10px; }
+  #hint { display: none; }
+  #legend-box {
+    top: calc(62px + var(--safe-t)); bottom: auto; left: calc(8px + var(--safe-l)); width: 170px; padding: 6px 8px;
+  }
+  #legend-box .lg-head { margin-bottom: 4px; font-size: 9px; }
+
+  /* abajo: línea de tiempo y, encima, el dock en horizontal */
+  #timeline {
+    left: calc(8px + var(--safe-l)); right: calc(8px + var(--safe-r)); bottom: calc(8px + var(--safe-b));
+    padding: 6px 10px 4px;
+  }
+  .tl-head { margin-bottom: 4px; }
+  .tl-ticks span:nth-child(even) { display: none; }    /* solo -12h, ahora, +12h, +24h */
+
+  /* --tl-h = altura real de la línea de tiempo (la mide ui/mobile.js); 112px es el valor por defecto */
+  #dock {
+    left: calc(8px + var(--safe-l)); right: calc(8px + var(--safe-r)); bottom: calc(var(--tl-h, 112px) + 16px + var(--safe-b));
+    flex-direction: column-reverse; align-items: stretch; gap: 8px;
+  }
+  #rail { display: flex; gap: 8px; }
+  .rail-btn { width: 46px; height: 46px; }
+  .pop { width: 100%; max-width: none; min-width: 0; max-height: 42dvh; }
+  #layer-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); justify-items: center; }
+  #metrics { grid-template-columns: repeat(4, 1fr); justify-items: center; }
+  #pop-explore { max-width: none; }
+  #pop-explore #ev-list { max-height: 28dvh; }
+
+  /* panel de clima como hoja inferior: se pliega tocando su cabecera */
+  #panel {
+    top: auto; left: calc(8px + var(--safe-l)); right: calc(8px + var(--safe-r)); width: auto;
+    bottom: calc(var(--tl-h, 112px) + 16px + 46px + 8px + var(--safe-b));
+    max-height: calc(100dvh - var(--tl-h, 112px) - 140px - var(--safe-b) - var(--safe-t));
+  }
+  #panel::before { content: ''; display: block; width: 44px; height: 4px; margin: 0 auto 8px; background: var(--dim); }
+  #panel .ph { cursor: pointer; }
+  #panel.collapsed .metrics, #panel.collapsed .fc, #panel.collapsed .anom,
+  #panel.collapsed .chip, #panel.collapsed .alerts { display: none; }
+  #panel.collapsed .hero { margin-bottom: 0; }
+
+  #toast { bottom: calc(var(--tl-h, 112px) + 76px + var(--safe-b)); }
+  .maplibregl-ctrl-bottom-right { bottom: calc(var(--tl-h, 112px) + 12px + var(--safe-b)); }
+
+  /* ventana de la postal a pantalla casi completa */
+  #postcard { padding: 8px; }
+  .pc-box { padding: 12px; }
+  .pc-actions .btn-px { flex: 1 1 140px; justify-content: center; }
+}
+
+/* ---------- Móvil horizontal / pantallas bajas (alto ≤ 520 px) ---------- */
+@media (max-height: 520px) and (min-width: 560px) {
+  #search { top: calc(8px + var(--safe-t)); left: calc(8px + var(--safe-l)); right: auto; width: min(440px, calc(100vw - 300px)); gap: 6px; }
+  #legend-box { top: calc(62px + var(--safe-t)); bottom: auto; left: calc(8px + var(--safe-l)); width: 170px; padding: 6px 8px; }
+  #legend-box .lg-head { margin-bottom: 4px; font-size: 9px; }
+  #hint { display: none; }
+
+  #timeline {
+    left: 50%; right: auto; transform: translateX(-50%); width: min(480px, calc(100vw - 460px)); min-width: 280px;
+    bottom: calc(8px + var(--safe-b)); padding: 4px 12px 2px;
+  }
+  .tl-head { margin-bottom: 2px; }
+  .tl-ticks { display: none; }
+
+  #dock { left: calc(8px + var(--safe-l)); right: auto; bottom: calc(8px + var(--safe-b)); flex-direction: row; align-items: flex-end; z-index: 4; }   /* los menús abiertos quedan sobre la línea de tiempo */
+  #rail { display: grid; gap: 6px; }
+  .rail-btn { width: 42px; height: 42px; }
+  .pop { max-width: 250px; max-height: calc(100dvh - 24px); }
+
+  #panel {
+    top: calc(8px + var(--safe-t)); bottom: auto; left: auto; right: calc(8px + var(--safe-r)); width: 270px;
+    max-height: calc(100dvh - 16px - var(--safe-t) - var(--safe-b));
+  }
+  #panel::before { display: none; }
+  #toast { bottom: calc(80px + var(--safe-b)); }
+  .maplibregl-ctrl-bottom-right { bottom: calc(8px + var(--safe-b)); }
+  /* con el panel abierto ocupando la columna derecha, los controles y créditos se desplazan a su izquierda */
+  body:has(#panel:not([hidden])) .maplibregl-ctrl-bottom-right { right: calc(278px + var(--safe-r)); }
+}

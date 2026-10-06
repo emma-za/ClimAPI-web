@@ -1,0 +1,148 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="color-scheme" content="dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Climapi">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/veleta.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/veleta.png">
+  <title>Climapi – Globo con clima</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="src/css/base.css?v=29">
+  <link rel="stylesheet" href="src/css/icons.css?v=29">
+  <link rel="stylesheet" href="src/css/map-ui.css?v=29">
+  <link rel="stylesheet" href="src/css/panel.css?v=29">
+  <link rel="stylesheet" href="src/css/dock.css?v=29">
+  <link rel="stylesheet" href="src/css/timeline.css?v=29">
+  <link rel="stylesheet" href="src/css/explore.css?v=29">
+  <link rel="stylesheet" href="src/css/storms.css?v=29">
+  <link rel="stylesheet" href="src/css/anomaly.css?v=29">
+  <link rel="stylesheet" href="src/css/postcard.css?v=29">
+  <link rel="stylesheet" href="src/css/responsive.css?v=29">
+</head>
+<body>
+  <div id="map"></div>
+
+  <form id="search" autocomplete="off">
+    <input id="q" type="search" placeholder="Buscar ciudad…" aria-label="Buscar ciudad">
+    <button type="submit">Buscar</button>
+    <button type="button" id="share-btn" title="Copiar enlace de esta vista" aria-label="Copiar enlace de esta vista"><i data-i="share-alt"></i></button>
+    <button type="button" id="postcard-btn" title="Crear una postal de esta vista" aria-label="Crear una postal de esta vista"><i data-i="camera"></i></button>
+    <ul id="results" hidden></ul>
+  </form>
+
+  <aside id="panel" hidden>
+    <button id="close" aria-label="Cerrar">×</button>
+    <div id="panel-body"></div>
+  </aside>
+
+  <!-- Dock: 3 iconos que abren paneles pequeños -->
+  <nav id="dock" aria-label="Capas del mapa">
+    <div id="rail">
+      <button class="rail-btn" data-pop="data" title="Qué dato ver (temperatura, lluvia…)" aria-expanded="false"><span class="ic" id="rail-metric"><i data-i="temp"></i></span></button>
+      <button class="rail-btn" data-pop="layers" title="Capas (viento, nubes, fronteras…)" aria-expanded="false"><span class="ic"><i data-i="layers"></i></span></button>
+      <button class="rail-btn" data-pop="explore" title="Explorar eventos del planeta" aria-expanded="false"><span class="ic"><i data-i="explore"></i></span><b id="ev-count"></b></button>
+      <button class="rail-btn" data-pop="storms" title="Tormentas y huracanes" aria-expanded="false"><span class="ic"><i data-i="storm"></i></span><b id="storm-count"></b></button>
+    </div>
+
+    <section class="pop" id="pop-data" hidden>
+      <h3 id="metric-title">Temperatura</h3>
+      <div id="metrics"><small>Cargando…</small></div>
+    </section>
+
+    <section class="pop" id="pop-layers" hidden>
+      <h3>Capas</h3>
+      <button type="button" id="sat-view" class="btn-px" title="Imagen de satélite limpia: sin mapa de datos ni sombra de noche"><i data-i="sat"></i><span>Solo satélite</span></button>
+      <div id="layer-grid">
+        <label class="tog cap" title="Mapa de color del dato elegido"><input type="checkbox" id="toggle-field" checked disabled><span class="ic"><i data-i="chart-line"></i></span><em>Datos</em></label>
+        <label class="tog cap" title="Partículas de viento"><input type="checkbox" id="toggle-wind" checked disabled><span class="ic"><i data-i="wind"></i></span><em>Viento</em></label>
+        <label class="tog cap" title="Nubes animadas"><input type="checkbox" id="toggle-clouds" checked disabled><span class="ic"><i data-i="clouds"></i></span><em>Nubes</em></label>
+        <label class="tog cap" title="Imágenes de satélite reales (NASA GIBS)"><input type="checkbox" id="toggle-sat"><span class="ic"><i data-i="sat"></i></span><em>Satélite</em></label>
+        <label class="tog cap" title="Día y noche"><input type="checkbox" id="toggle-night" checked disabled><span class="ic"><i data-i="night"></i></span><em>Noche</em></label>
+        <label class="tog cap" title="Fronteras de países"><input type="checkbox" id="toggle-borders" checked><span class="ic"><i data-i="borders"></i></span><em>Fronteras</em></label>
+        <label class="tog cap" title="Nombres de países y ciudades"><input type="checkbox" id="toggle-names" checked><span class="ic"><i data-i="names"></i></span><em>Nombres</em></label>
+      </div>
+    </section>
+
+    <section class="pop" id="pop-explore" hidden>
+      <h3>Explorar</h3>
+      <button type="button" id="ev-random" class="btn-px"><i data-i="explore"></i> Sorpréndeme</button>
+      <label class="switch"><input type="checkbox" id="toggle-events" checked><span>Mostrar eventos</span></label>
+      <div id="ev-list"><small>Buscando eventos…</small></div>
+    </section>
+
+    <section class="pop" id="pop-storms" hidden>
+      <h3>Tormentas activas</h3>
+      <label class="switch"><input type="checkbox" id="toggle-storms" checked><span>Mostrar en el mapa</span></label>
+      <div id="storm-list"><small>Buscando…</small></div>
+    </section>
+  </nav>
+
+  <div id="legend-box">
+    <div class="lg-head"><span id="legend-name"></span></div>
+    <div id="legend-bar"></div>
+    <div class="lg"><span id="legend-lo"></span><span id="legend-hi"></span></div>
+    <small id="sat-note"></small>
+    <small id="layer-status"></small>
+  </div>
+
+  <!-- Línea de tiempo global: -12 h ... +24 h -->
+  <div id="timeline" role="group" aria-label="Línea de tiempo">
+    <div class="tl-head">
+      <button type="button" id="tl-play" class="tl-btn" title="Reproducir"><i data-i="play"></i></button>
+      <span id="tl-label">AHORA</span>
+      <button type="button" id="tl-now" class="tl-btn" title="Volver a ahora">Ahora</button>
+    </div>
+    <input type="range" id="tl-range" min="-12" max="24" step="0.5" value="0" aria-label="Hora respecto a ahora">
+    <div class="tl-ticks">
+      <span style="left:0%">-12h</span><span style="left:16.67%">-6h</span><span style="left:33.33%">ahora</span>
+      <span style="left:50%">+6h</span><span style="left:66.67%">+12h</span><span style="left:83.33%">+18h</span><span style="left:100%">+24h</span>
+    </div>
+  </div>
+
+  <!-- Postal compartible -->
+  <div id="postcard" role="dialog" aria-modal="true" aria-label="Postal de Climapi" hidden>
+    <div class="pc-box">
+      <button type="button" id="pc-close" aria-label="Cerrar">×</button>
+      <h3>Postal del planeta</h3>
+      <img id="pc-img" alt="Vista previa de la postal">
+      <p id="pc-status" role="status"></p>
+      <div class="pc-actions">
+        <button type="button" id="pc-download" class="btn-px" disabled>Descargar PNG</button>
+        <button type="button" id="pc-copy" class="btn-px" disabled>Copiar imagen</button>
+        <button type="button" id="pc-share" class="btn-px" hidden>Compartir…</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+
+  <div id="hint">Haz clic en cualquier punto del globo para ver el clima</div>
+
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="src/js/core/device.js?v=29"></script>
+  <script src="src/js/core/share.js?v=29"></script>
+  <script src="src/js/effects/space.js?v=29"></script>
+  <script src="src/js/data/cities.js?v=29"></script>
+  <script src="src/js/layers/daynight.js?v=29"></script>
+  <script src="src/js/layers/clouds.js?v=29"></script>
+  <script src="src/js/layers/satellite.js?v=29"></script>
+  <script src="src/js/layers/borders.js?v=29"></script>
+  <script src="src/js/features/storms.js?v=29"></script>
+  <script src="src/js/features/explore.js?v=29"></script>
+  <script src="src/js/features/anomaly.js?v=29"></script>
+  <script src="src/js/features/postcard.js?v=29"></script>
+  <script src="src/js/ui/icons.js?v=29"></script>
+  <script src="src/js/ui/dock.js?v=29"></script>
+  <script src="src/js/ui/mobile.js?v=29"></script>
+  <script src="src/js/layers/weather.js?v=29"></script>
+  <script src="src/js/ui/timeline.js?v=29"></script>
+  <script src="src/js/core/app.js?v=29"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+/* Base: tipografías, variables de diseño, reinicio y el "bloque pixel" compartido por los paneles. */
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+:root {
+  --bg: #0a0a0f;
+  --panel: #101018;
+  --line: #e6e6e6;
+  --dim: #7a7a8c;
+  --accent: #7dffb3;
+  --px: 4px;               /* desplazamiento de la sombra escalonada */
+}
+
+* { box-sizing: border-box; border-radius: 0 !important; }
+
+html, body {
+  margin: 0; height: 100%;
+  background: var(--bg); color: var(--line);
+  font-family: 'VT323', monospace; font-size: 20px;
+}
+body { overflow: hidden; }
+
+#map { position: absolute; inset: 0; }
+#map canvas { image-rendering: pixelated; }
+
+/* Bloque pixel: borde duro y sombra escalonada */
+#search input, #search button, #results, #panel, #hint, .maplibregl-ctrl-group {
+  background: var(--panel); border: 2px solid var(--line); box-shadow: var(--px) var(--px) 0 #000;
+  color: var(--line); font-family: inherit;
+}
+#search button, #hint, .place { font-family: 'Silkscreen', monospace; text-transform: uppercase; }
